@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Verloren Zak van Sinterklaas</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#e7d3ab;
+    font-family:Verdana,sans-serif;
+    overflow-x:hidden;
+}
+
+header{
+    text-align:center;
+    background:#8b0000;
+    color:white;
+    padding:15px;
+}
+
+#intro{
+    text-align:center;
+    padding:20px;
+}
+
+#kaart{
+    position:relative;
+    max-width:1200px;
+    margin:auto;
+    height:900px;
+
+    background:
+    radial-gradient(circle at center,#f6e5bc,#d7b47a);
+
+    border:15px solid #7b4a12;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,.5);
+}
+
+#titelkaart{
+    position:absolute;
+    top:15px;
+    width:100%;
+    text-align:center;
+    font-size:32px;
+    color:#7b0000;
+    font-weight:bold;
+}
+
+.route{
+    position:absolute;
+    border-top:8px dashed #5f4321;
+}
+
+#r1{
+    top:720px;
+    left:180px;
+    width:140px;
+    transform:rotate(-20deg);
+}
+
+#r2{
+    top:610px;
+    left:320px;
+    width:180px;
+    transform:rotate(15deg);
+}
+
+#r3{
+    top:470px;
+    left:500px;
+    width:150px;
+    transform:rotate(-18deg);
+}
+
+#r4{
+    top:320px;
+    left:650px;
+    width:170px;
+    transform:rotate(15deg);
+}
+
+.locatie{
+    position:absolute;
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:#b22222;
+    border:5px solid gold;
+    color:white;
+    font-size:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.locatie:hover{
+    transform:scale(1.1);
+}
+
+.voltooid{
+    background:#28a745;
+}
+
+#l1{left:80px;top:680px;}
+#l2{left:300px;top:590px;}
+#l3{left:500px;top:450px;}
+#l4{left:670px;top:290px;}
+#l5{left:860px;top:180px;}
+
+#zak{
+    position:absolute;
+    top:40px;
+    right:60px;
+    text-align:center;
+    font-size:80px;
+    display:none;
+}
+
+#kompas{
+    position:absolute;
+    bottom:30px;
+    right:40px;
+    font-size:90px;
+}
+
+.decoratie{
+    position:absolute;
+    font-size:40px;
+}
+
+#d1{top:120px;left:150px;}
+#d2{top:250px;left:250px;}
+#d3{top:550px;left:850px;}
+#d4{top:700px;left:500px;}
+#d5{top:350px;left:100px;}
+
+#popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.popup-box{
+    background:white;
+    width:90%;
+    max-width:500px;
+    border-radius:12px;
+    padding:25px;
+}
+
+input{
+    width:90%;
+    padding:10px;
+    margin-top:10px;
+}
+
+button{
+    margin-top:15px;
+    padding:10px 20px;
+    background:#8b0000;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+
+#progressContainer{
+    width:90%;
+    margin:20px auto;
+    background:#ddd;
+    border-radius:15px;
+}
+
+#progress{
+    width:0%;
+    height:35px;
+    background:#28a745;
+    border-radius:15px;
+    color:white;
+    text-align:center;
+    line-height:35px;
+}
+
+#eindscherm{
+    display:none;
+    text-align:center;
+    padding:30px;
+    background:#fff3cd;
+    margin:20px;
+    border-radius:12px;
+}
+
+@media(max-width:900px){
+
+#kaart{
+height:700px;
+}
+
+.locatie{
+width:60px;
+height:60px;
+font-size:24px;
+}
+
+#l1{left:30px;top:550px;}
+#l2{left:180px;top:470px;}
+#l3{left:320px;top:370px;}
+#l4{left:480px;top:230px;}
+#l5{left:620px;top:120px;}
+
+.route{
+display:none;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎅 De Verloren Zak van Sinterklaas 🎅</h1>
+</header>
+
+<div id="intro">
+
+<h2>Welkom Speurneus!</h2>
+
+<p>
+Hoofdpiet is de grote zak kwijtgeraakt.
+Doorloop de 5 locaties en vind de geheime verstopplaats.
+</p>
+
+</div>
+
+<div id="progressContainer">
+<div id="progress">0%</div>
+</div>
+
+<div id="kaart">
+
+<div id="titelkaart">
+SCHATKAART VAN SINTERKLAAS
+</div>
+
+<div id="zak">
+🎅<br>🎁
+</div>
+
+<div id="kompas">🧭</div>
+
+<div class="decoratie" id="d1">⭐</div>
+<div class="decoratie" id="d2">🎁</div>
+<div class="decoratie" id="d3">⭐</div>
+<div class="decoratie" id="d4">🎀</div>
+<div class="decoratie" id="d5">🎁</div>
+
+<div class="route" id="r1"></div>
+<div class="route" id="r2"></div>
+<div class="route" id="r3"></div>
+<div class="route" id="r4"></div>
+
+<div class="locatie" id="loc1" onclick="openLocatie(1)">🎁</div>
+<div class="locatie" id="loc2" onclick="openLocatie(2)" style="display:none">🚂</div>
+<div class="locatie" id="loc3" onclick="openLocatie(3)" style="display:none">🏠</div>
+<div class="locatie" id="loc4" onclick="openLocatie(4)" style="display:none">🍪</div>
+<div class="locatie" id="loc5" onclick="openLocatie(5)" style="display:none">📜</div>
+
+</div>
+
+<div id="popup">
+<div class="popup-box">
+
+<h2 id="titel"></h2>
+
+<p id="omschrijving"></p>
+
+<input id="code" placeholder="Voer de geheime code in">
+
+<br>
+
+<button onclick="controleerCode()">Controleer</button>
+
+</div>
+</div>
+
+<div id="eindscherm">
+
+<h1>🎉 GEFELICITEERD 🎉</h1>
+
+<h2>Jullie hebben de zak gevonden!</h2>
+
+<p>
+De echte zak ligt:
+</p>
+
+<h1 style="color:#b22222">
+ONDER DE TRAP
+</h1>
+
+</div>
+
+<script>
+
+const locaties = {
+
+1:{
+naam:"Pakjesmagazijn",
+tekst:"Zoek tussen de cadeautjes naar de code.",
+code:"PIET123"
+},
+
+2:{
+naam:"Pakjesboot",
+tekst:"De stoomboot bevat een nieuwe aanwijzing.",
+code:"BOOT456"
+},
+
+3:{
+naam:"Dakenroute",
+tekst:"Kijk goed op het dak voor de geheime code.",
+code:"DAK789"
+},
+
+4:{
+naam:"Pepernotenbakkerij",
+tekst:"Tussen de pepernoten ligt een aanwijzing.",
+code:"PEPER321"
+},
+
+5:{
+naam:"Grote Boek",
+tekst:"Het Grote Boek bevat de laatste code.",
+code:"BOEK654"
+}
+
+};
+
+let huidige=0;
+let voltooid=0;
+
+function openLocatie(n){
+
+huidige=n;
+
+document.getElementById("popup").style.display="flex";
+
+document.getElementById("titel").innerHTML=
+locaties[n].naam;
+
+document.getElementById("omschrijving").innerHTML=
+locaties[n].tekst;
+
+document.getElementById("code").value="";
+
+}
+
+function controleerCode(){
+
+let invoer=
+document.getElementById("code").value.trim().toUpperCase();
+
+if(invoer===locaties[huidige].code){
+
+document.getElementById("popup").style.display="none";
+
+document.getElementById("loc"+huidige)
+.classList.add("voltooid");
+
+voltooid++;
+
+let percentage=voltooid*20;
+
+document.getElementById("progress").style.width=
+percentage+"%";
+
+document.getElementById("progress").innerHTML=
+percentage+"%";
+
+if(huidige<5){
+
+document.getElementById("loc"+(huidige+1))
+.style.display="flex";
+
+alert("Goed gedaan! Op naar de volgende locatie.");
+
+}
+else{
+
+document.getElementById("zak").style.display="block";
+document.getElementById("eindscherm").style.display="block";
+
+window.scrollTo({
+top:document.body.scrollHeight,
+behavior:"smooth"
+});
+
+}
+
+}
+else{
+
+alert("Dat is niet de juiste code.");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
